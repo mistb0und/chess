@@ -1,5 +1,8 @@
 package pieces;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -8,6 +11,7 @@ import java.io.IOException;
 import java.net.URL;
 
 public class PieceIcons {
+    private static final Logger logger = LoggerFactory.getLogger(PieceIcons.class);
     private static final int ROWS = 2;
     private static final int COLS = 6;
     private static final String spritePath = "/pieces/pieces.png";
@@ -21,14 +25,17 @@ public class PieceIcons {
 
         URL resource = PieceIcons.class.getResource(spritePath);
         if (resource == null) {
+            logger.error("Не знайдено ресурс: {}", spritePath);
             return null;
         }
 
         BufferedImage read = ImageIO.read(resource);
         if (read == null) {
+            logger.error("Не вдалося прочитати зображення з ресурсу: {}", spritePath);
             return null;
         } else {
             sprite = read;
+            logger.info("Спрайт успішно завантажено: {}", spritePath);
             return sprite;
         }
     }

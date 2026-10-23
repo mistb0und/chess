@@ -9,7 +9,7 @@ public class Rook extends Piece {
     }
 
     @Override
-    public boolean isValidMove(int targetY, int targetX, Piece[][] board) {
+    protected boolean isValidMoveInternal(int targetY, int targetX, Piece[][] board) {
         if (targetY != this.y && targetX != this.x) {
             return false;
         }

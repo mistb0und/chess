@@ -9,7 +9,7 @@ public class Elephant extends Piece {
     }
 
     @Override
-    public boolean isValidMove(int targetY, int targetX, Piece[][] board) {
+    protected boolean isValidMoveInternal(int targetY, int targetX, Piece[][] board) {
         if (Math.abs(targetY - this.y) != Math.abs(targetX - this.x)) {
             return false;
         }

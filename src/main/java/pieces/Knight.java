@@ -10,7 +10,7 @@ public class Knight extends  Piece
     }
 
     @Override
-    public boolean isValidMove(int targetY, int targetX, Piece[][] board) {
+    protected boolean isValidMoveInternal(int targetY, int targetX, Piece[][] board) {
         if (targetY < 0 || targetY >= 8 || targetX < 0 || targetX >= 8) {
             return false;
         }

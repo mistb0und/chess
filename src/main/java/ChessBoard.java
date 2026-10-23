@@ -1,5 +1,7 @@
 import logic.GameLogic;
 import logic.Move;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pieces.*;
 
 import javax.swing.*;
@@ -8,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class ChessBoard extends JFrame {
+    private static final Logger logger = LoggerFactory.getLogger(ChessBoard.class);
     private Piece selectedPiece = null;
     private final int SIZE = 8;
     private final JButton[][] squares = new JButton[SIZE][SIZE];
@@ -26,6 +29,7 @@ public class ChessBoard extends JFrame {
     }
 
     static void main() throws IOException {
+        logger.info("Запуск гри Шахи");
         ChessBoard chessBoard = new ChessBoard();
         chessBoard.printMoveHistory();
     }
@@ -87,12 +91,15 @@ public class ChessBoard extends JFrame {
                             selectedPiece = board[currentRow][currentCol];
                         }
                     } else {
+                        logger.info("{} намагається зробити хід з ({},{}) на ({},{})", 
+                            selectedPiece.getSymbol(), selectedPiece.getY(), selectedPiece.getX(), currentRow, currentCol);
+                        
                         if (selectedPiece.isValidMove(currentRow, currentCol, board)) {
                             Piece capturedPiece = board[currentRow][currentCol];
                             Move move = new Move(selectedPiece, selectedPiece.getX(), selectedPiece.getY(),
                                     currentCol, currentRow, capturedPiece);
                             moveHistory.add(move);
-                            System.out.println(move);
+                            logger.info("Хід виконано: {}", move);
 
                             board[selectedPiece.getY()][selectedPiece.getX()] = null;
                             selectedPiece.setY(currentRow);
@@ -101,16 +108,16 @@ public class ChessBoard extends JFrame {
 
                             boolean opponentInCheck = gameLogic.isKingInCheck(board, !currentTurnIsWhite);
                             if (opponentInCheck) {
-                                System.out.println("CHECK!");
+                                logger.warn("CHECK!");
                                 if (gameLogic.isCheckMate(board, !currentTurnIsWhite)) {
-                                    System.out.println("CHECKMATE! " + (currentTurnIsWhite ? "White" : "Black") + " wins!");
+                                    logger.warn("CHECKMATE! {} wins!", currentTurnIsWhite ? "White" : "Black");
                                 }
                             }
 
                             currentTurnIsWhite = !currentTurnIsWhite;
-                            System.out.println("Current turn: " + (currentTurnIsWhite ? "White" : "Black"));
+                            logger.debug("Current turn: {}", currentTurnIsWhite ? "White" : "Black");
                         } else {
-                            System.out.println("Invalid move");
+                            logger.debug("Invalid move");
                         }
                         selectedPiece = null;
                         refreshBoard();
@@ -153,6 +160,7 @@ public class ChessBoard extends JFrame {
                     try {
                         icon = board[row][col].getIcon();
                     } catch (IOException e) {
+                        logger.error("Помилка завантаження іконки для фігури на позиції ({}, {})", row, col, e);
                         throw new RuntimeException(e);
                     }
                     if (icon != null) {
@@ -171,9 +179,9 @@ public class ChessBoard extends JFrame {
     }
 
     public void printMoveHistory() {
-        System.out.println("=== logic.Move history ===");
+        logger.info("=== logic.Move history ===");
         for (int i = 0; i < moveHistory.size(); i++) {
-            System.out.println((i + 1) + ". " + moveHistory.get(i));
+            logger.info("{}. {}", i + 1, moveHistory.get(i));
         }
     }
 }

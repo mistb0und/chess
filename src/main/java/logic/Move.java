@@ -1,5 +1,7 @@
 package logic;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pieces.Piece;
 
 public class Move {
@@ -13,7 +15,12 @@ public class Move {
         this.fromY = fromY;
         this.toX = toX;
         this.toY = toY;
+        Logger logger = LoggerFactory.getLogger(Move.class);
+        if (capturedPiece != null) {
+            logger.info("Взято фігуру {}", capturedPiece.getSymbol());
+        }
         this.capturedPiece = capturedPiece;
+        logger.debug("Створено хід: {}", this.getDetailInfo());
     }
 
     public String getDetailInfo() {

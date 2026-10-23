@@ -9,7 +9,7 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public boolean isValidMove(int targetY, int targetX, Piece[][] board) {
+    protected boolean isValidMoveInternal(int targetY, int targetX, Piece[][] board) {
         int direction = isWhite ? -1 : 1;
         int startRow = isWhite ? 6 : 1;
 
